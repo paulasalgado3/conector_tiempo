@@ -1,7 +1,7 @@
 html
   head
     link(rel='stylesheet', href='./animate.css')
-    script(src='http://code.jquery.com/jquery-1.7.1.min.js')
+    script(src='https://code.jquery.com/jquery-3.1.1.min.js')
     script(src='https://api.trello.com/1/client.js?key=348c82030c3508da85a953138c86ae34')
     script(src='./circletimer.min.js')
     link(href='./circletimer.css', rel='stylesheet')
@@ -166,7 +166,7 @@ html
       }
       function getListas(){
       var xmlHttp = new XMLHttpRequest();
-      xmlHttp.open( "GET", "https://trello.com/1/boards/564e4cc5a85d140f63742b3d/lists?fields=name&key=348c82030c3508da85a953138c86ae34&token="+sessionStorage.getItem('token'), false );
+      xmlHttp.open( "GET", "https://trello.com/1/boards/586cfa0ddfb93cfbe4bcb6ec/lists?fields=name&key=348c82030c3508da85a953138c86ae34&token="+sessionStorage.getItem('token'), false );
       xmlHttp.send( null );
       obj = JSON.parse(xmlHttp.responseText);
       var listas = document.getElementById("listas");
