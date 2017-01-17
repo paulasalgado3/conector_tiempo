@@ -1,0 +1,275 @@
+html
+  head
+    link(rel='stylesheet', href='./animate.css')
+    script(src='http://code.jquery.com/jquery-1.7.1.min.js')
+    script(src='https://api.trello.com/1/client.js?key=348c82030c3508da85a953138c86ae34')
+    script(src='./circletimer.min.js')
+    link(href='./circletimer.css', rel='stylesheet')
+    script(src='./assets/jquery.fittext.js')
+    script(src='./jquery.textillate.js')
+    script(src='./assets/jquery.lettering.js')
+    link(rel='stylesheet', type='text/css', href='./timer/pietimer.css')
+    script(type='text/javascript', src='./timer/jquery.pietimer.js')
+    style.
+      @font-face {
+      font-family: 'Raleway';
+      src: url('./font/Raleway-Regular.ttf');
+      }
+      @font-face {
+      font-family: 'Raleway-bold';
+      src: url('./font/Raleway-Bold.ttf');
+      }
+      @font-face {
+      font-family: 'Raleway-semibold';
+      src: url('./font/Raleway-SemiBold.ttf');
+      }
+      body{
+      font-family: Raleway, Helvetica, sans-serif;
+      font-weight: 700;
+      color: #ffffff;
+      line-height: 1.25em;
+      }
+      #banner{
+      padding: 9em 0 9em 0;
+      background-color: #4686a0;
+      color: rgba(255, 255, 255, 0.75);
+      background-attachment: fixed, fixed, fixed;
+      background-image: url("assets/css/images/overlay2.png"), url("assets/css/images/overlay3.svg"), linear-gradient(45deg, #9dc66b 5%, #4fa49a 30%, #4361c2);
+      background-position: top left, center center, center center;
+      background-size: auto, cover, cover;
+      overflow: hidden;
+      position: relative;
+      text-align: center;
+      }
+      .header {
+      background-image: url(./dark_tint.png), url(./bokeh_car_lights_bg.jpg);
+      background-position: center center;
+      background-size: cover;
+      color: #ffffff;
+      }
+      .centrado{
+      text-align: center;
+      padding: 14em 0em 14em;
+      }
+      button{
+      background: #222 ;
+      display: inline-block;
+      padding: 5px 10px 6px;
+      color: #fff;
+      text-decoration: none;
+      font-weight: bold;
+      line-height: 1;
+      -moz-border-radius: 5px;
+      -webkit-border-radius: 5px;
+      -moz-box-shadow: 0 1px 3px #999;
+      -webkit-box-shadow: 0 1px 3px #999;
+      text-shadow: 0 -1px 1px #222;
+      border-bottom: 1px solid #222;
+      position: relative;
+      cursor: pointer;
+      -moz-box-shadow: 0 1px 3px rgba(0,0,0,0.5);
+      -webkit-box-shadow: 0 1px 3px rgba(0,0,0,0.5);
+      text-shadow: 0 -1px 1px rgba(0,0,0,0.25);
+      border-bottom: 1px solid rgba(0,0,0,0.25);
+      border-top: 1px solid rgba(0,0,0,0.25);
+      border-left: 1px solid rgba(0,0,0,0.25);
+      border-right: 1px solid rgba(0,0,0,0.25);
+      font-size: 14px;
+      padding: 8px 14px 9px;
+      font-family: Raleway, Helvetica, sans-serif;
+      font-weight: 700;
+      color: #ffffff;
+      line-height: 1.25em;
+      }
+      .button:hover {
+      border-top-color: #595959;
+      background: #595959;
+      color: #ccc;
+      }
+      .button:active {
+      border-top-color: #e7ed42;
+      background: #e7ed42;
+      }
+      #tarjeta{
+      font-family:  Raleway, Helvetica, sans-serif;
+      font-weight: 700;
+      color: #ffffff;
+      font-size: 4em;
+      line-height: 1.25em;
+      margin: 0 0 0.5em 0;
+      padding: 0;
+      }
+    script(type='text/javascript').
+      function AudioEnd(){
+      //alert("Termino el sonido");
+      var id_tarjeta = parseInt(sessionStorage.getItem('id_tarjeta'));
+      if(sessionStorage.getItem('tarjetaActiva')==2){
+      FinaldeEncuentro();
+      }
+      }
+      function iniciarTimer() {
+      $('#timer').pietimer({
+      timerSeconds: 0,
+      fill: false,
+      showPercentage: true,
+      callback: function() {
+      if ( parseInt(sessionStorage.getItem('cambioSelect')) == 1) {
+      Salir();
+      var audio = document.getElementById('audio');
+      audio.play();
+      /*audio.onended(function () {
+      alert("Termino el sonido");
+      if(id_tarjeta == obj.cards.length){
+      FinaldeEncuentro();
+      }
+      });*/
+      $('#tarjeta').on('outAnimationEnd.tlt', function () {
+      obtenerSiguienteTarjeta();
+      });
+      }
+      //$('#timer').pietimer('reset');
+      }
+      });
+      }
+      function iniciar2Timer(){
+      $('#timer').pietimer('reset');
+      $('#timer').pietimer('start', document.getElementById('tiempotxt').value*60);
+      }
+    script.
+      function Ingresar(){
+      $('#tarjeta').textillate('in');
+      $('#tarjeta').on('inAnimationEnd.tlt', function () {
+      $('#timer').pietimer('reset');
+      });
+      }
+      function Salir(){
+      $('#tarjeta').textillate('out');
+      }
+      function AuthenticateTrello() {
+      Trello.authorize({
+      name: "Innovacion27",
+      type: "redirect",
+      interactive: true,
+      expiration: "never",
+      persist: true,
+      success: function () { onAuthorizeSuccessful(); },
+      scope: { write: false, read: true },
+      });
+      sessionStorage.setItem('cambioSelect', 0);
+      }
+      function onAuthorizeSuccessful() {
+      //	localStorage.clear();
+      //	sessionStorage.clear();
+      var token = Trello.token();
+      sessionStorage.setItem('token', token);
+      var t = sessionStorage.getItem('token');
+      }
+      function getListas(){
+      var xmlHttp = new XMLHttpRequest();
+      xmlHttp.open( "GET", "https://trello.com/1/boards/564e4cc5a85d140f63742b3d/lists?fields=name&key=348c82030c3508da85a953138c86ae34&token="+sessionStorage.getItem('token'), false );
+      xmlHttp.send( null );
+      obj = JSON.parse(xmlHttp.responseText);
+      var listas = document.getElementById("listas");
+      var text="";
+      for (i = 0; i < obj.length; i++) {
+      var opcion = document.createElement("option");
+      opcion.text = obj[i].name;
+      opcion.value = obj[i].id;
+      listas.add(opcion);
+      }
+      obtenerTarjetasInicial();
+      document.getElementById('tiempotxt').value = 0;
+      }
+      function obtenerTarjetasInicial()
+      {
+      sessionStorage.setItem('tarjetaActiva',1);
+      sessionStorage.setItem('id_tarjeta', 0);
+      var id_tarjeta = parseInt(sessionStorage.getItem('id_tarjeta'));
+      var listas = document.getElementById("listas");
+      var id_lista = listas.options[listas.selectedIndex].value;
+      var xmlHttp = new XMLHttpRequest();
+      xmlHttp.open( "GET", "https://trello.com/1/lists/"+id_lista+"?fields=name&cards=open&card_fields=name&key=348c82030c3508da85a953138c86ae34&token="+sessionStorage.getItem('token'), false );
+      xmlHttp.send( null );
+      obj = JSON.parse(xmlHttp.responseText);
+      var text="";
+      text += obj.cards[id_tarjeta].name;
+      document.getElementById('tiempotxt').value = obj.cards[id_tarjeta].name.split("|")[1];
+      if($("#tarjeta").find('.texts li:first')){
+      $("#tarjeta").find('.texts li:first').text(text);
+      Ingresar();
+      }else{
+      $("#tarjeta").innerHTML=text;
+      Ingresar();
+      }
+      }
+      function obtenerSiguienteTarjeta(){
+      var id_tarjeta = parseInt(sessionStorage.getItem('id_tarjeta'));
+      var listas = document.getElementById("listas");
+      var id_lista = listas.options[listas.selectedIndex].value;
+      var xmlHttp = new XMLHttpRequest();
+      xmlHttp.open( "GET", "https://trello.com/1/lists/"+id_lista+"?fields=name&cards=open&card_fields=name&key=348c82030c3508da85a953138c86ae34&token="+sessionStorage.getItem('token'), false );
+      xmlHttp.send( null );
+      obj = JSON.parse(xmlHttp.responseText);
+      var text="";
+      if(id_tarjeta < obj.cards.length-1){
+      Salir();
+      id_tarjeta = id_tarjeta + 1;
+      text += obj.cards[id_tarjeta].name;
+      document.getElementById('tiempotxt').value = obj.cards[id_tarjeta].name.split("|")[1];
+      sessionStorage.setItem('id_tarjeta', id_tarjeta);
+      $("#tarjeta").find('.texts li:first').text(text);
+      Ingresar();
+      } else {
+      //alert("no hay mas tarjetas");
+      sessionStorage.setItem('tarjetaActiva',2);
+      }
+      }
+      function obtenerTarjetaAnterior(){
+      var id_tarjeta = parseInt(sessionStorage.getItem('id_tarjeta'));
+      var listas = document.getElementById("listas");
+      var id_lista = listas.options[listas.selectedIndex].value;
+      var xmlHttp = new XMLHttpRequest();
+      xmlHttp.open( "GET", "https://trello.com/1/lists/"+id_lista+"?fields=name&cards=open&card_fields=name&key=348c82030c3508da85a953138c86ae34&token="+sessionStorage.getItem('token'), false );
+      xmlHttp.send( null );
+      obj = JSON.parse(xmlHttp.responseText);
+      id_tarjeta = id_tarjeta - 1;
+      var text="";
+      if(id_tarjeta <= obj.cards.length - 1){
+      Salir();
+      text += obj.cards[id_tarjeta].name;
+      sessionStorage.setItem('id_tarjeta', id_tarjeta);
+      document.getElementById('tiempotxt').value = obj.cards[id_tarjeta].name.split("|")[1];
+      $("#tarjeta").find('.texts li:first').text(text);
+      Ingresar();
+      } else {
+      //alert("no hay mas tarjetas");
+      sessionStorage.setItem('tarjetaActiva', 2);
+      }
+      }
+      function FinaldeEncuentro(){
+      var audioFinal = new Audio('Muse-Starlight.mp3');
+      audioFinal.play();
+      }
+      function setearVarCambio() {
+      sessionStorage.setItem('cambioSelect', 1);
+      }
+  body.header(onload='AuthenticateTrello(); getListas(); iniciarTimer();')
+    | Lista:
+    select#listas(onchange='obtenerTarjetasInicial(); setearVarCambio();')
+    button(onclick='obtenerTarjetaAnterior()')  Anterior 
+    button(onclick='obtenerSiguienteTarjeta()')  Siguiente 
+    | Tiempo: 
+    input#tiempotxt(type='text')
+    button(type='button', onclick='iniciar2Timer()')  Comenzar 
+    .centrado
+      #tarjeta(style='text-align:center; height:80px')
+      table(align='center')
+        tr
+          td(align='center')
+            #example(style='width:300px; height:300px')
+              #timer(style='width:300px;')
+        tr
+          td
+        audio#audio(onended='AudioEnd()')
+          source(src='Chinese-gong-soundv2.mp3', type='audio/mpeg')
+

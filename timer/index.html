@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+  <title>PieTimer example</title>
+
+
+  <link rel="stylesheet" type="text/css" href="pietimer.css">
+
+  <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+
+  <script type="text/javascript" src="jquery.pietimer.js"></script>
+
+
+  <script type="text/javascript">
+
+
+	function iniciarTimer() {	
+          $('#timer').pietimer({
+
+          timerSeconds: 10,
+
+          color: '#234',
+
+          fill: false,
+
+          showPercentage: true,
+
+          callback: function() {
+
+		$('#timer').pietimer('reset');
+
+       }
+
+      });
+
+}
+
+function iniciar2Timer(){
+$('#timer').pietimer('reset');
+
+$('#timer').pietimer('start', document.getElementById('tiempotxt').value);
+}
+  </script>
+
+</head>
+
+<body onLoad="iniciarTimer()">
+
+Tiempo: <input id="tiempotxt" type="text"><button type="button" onClick="iniciar2Timer()">comenzar</button>
+  <div id="timer"></div>
+
+</body>
+
+</html>
