@@ -35,7 +35,7 @@ app.set('view engine', 'jade');
 
 app.get(/^(.+)$/, function(req, res){ 
     switch(req.params[0]) {
-        case '/':
+        case '/conector_tiempo':
             res.render('conector_tiempo',{title:'Home'});
             break;
     default: res.sendFile( __dirname + req.params[0]); 
